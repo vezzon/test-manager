@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Testro.TestingManagement.WebApi.DataAccess;
+using Testro.TestingManagement.WebApi.Repositories;
+using Testro.TestingManagement.WebApi.Services;
 
 namespace Testro.TestingManagement.WebApi
 {
@@ -27,6 +32,21 @@ namespace Testro.TestingManagement.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
+            services
+                .AddScoped<TestProjectRepository>()
+                .AddScoped<TestProjectService>();
+            
+            services.AddDbContext<DatabaseContext>(o =>
+                o.UseMySql(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    new MariaDbServerVersion(new Version(10,5)), 
+                    mySqlOptionsAction => mySqlOptionsAction.CharSetBehavior(CharSetBehavior.NeverAppend)
+                )
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+                );
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Testro.TestingManagement.WebApi", Version = "v1"});
