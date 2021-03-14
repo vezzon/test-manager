@@ -638,3 +638,4 @@ MigrationBackup/
 .ionide/
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,aspnetcore,visualstudiocode,visualstudio,rider
+/Testro.TestingManagement.sln
