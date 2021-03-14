@@ -17,36 +17,36 @@ namespace Testro.TestingManagement.WebApi.Repositories
             _db = db;
         }
 
-        public async Task<List<TestProject>> GetAllTestProjects()
+        public async Task<List<TestProject>> GetAsync()
         {
             return await _db.TestProjects.ToListAsync();
         }
         
-        public async Task<TestProject> GetProjectById(int id)
+        public async Task<TestProject> GetAsync(int id)
         {
             var project = _db.TestProjects.FirstOrDefaultAsync(p => p.Id == id);
             return await project;
         }
 
-        public async Task<TestProject> GetProjectByName(string name)
+        public async Task<TestProject> GetAsync(string name)
         {
             var project = _db.TestProjects.FirstOrDefaultAsync(p => p.Name == name);
             return await project;
         }
 
-        public async Task AddProject(TestProject project)
+        public async Task AddAsync(TestProject project)
         {
             await _db.TestProjects.AddAsync(project);
             await _db.SaveChangesAsync();
         }
 
-        public async Task UpdateProject(TestProject project)
+        public async Task UpdateAsync(TestProject project)
         {
             _db.TestProjects.Update(project);
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteProject(string name)
+        public async Task DeleteAsync(string name)
         {
             var project = _db.TestProjects.FirstOrDefault(p => p.Name == name);
             if (project is not null)

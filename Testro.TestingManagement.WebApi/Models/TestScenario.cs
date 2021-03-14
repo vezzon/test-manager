@@ -5,12 +5,12 @@ namespace Testro.TestingManagement.WebApi.Models
     public class TestScenario
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public List<TestCase> TestCases { get; set; }
 
-        public TestScenario(string title)
+        public TestScenario(string name)
         {
-            Title = title;
+            Name = name;
         }
     }
 }
