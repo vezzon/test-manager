@@ -40,5 +40,12 @@ namespace Testro.TestingManagement.WebApi.Controllers
                 return NotFound();
             return Ok(project);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(TestProject project)
+        {
+            await _service.AddAsync(project);
+            return Ok(project);
+        }
     }
 }

@@ -31,8 +31,9 @@ namespace Testro.TestingManagement.WebApi.Services
             return await _projectRepository.GetAsync(name);
         }
         
-        public async Task Add(TestProject project)
+        public async Task AddAsync(TestProject project)
         {
+            // TODO check if project exists 
             await _projectRepository.AddAsync(project);
         }
         
