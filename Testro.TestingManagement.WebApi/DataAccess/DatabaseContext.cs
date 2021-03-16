@@ -10,6 +10,5 @@ namespace Testro.TestingManagement.WebApi.DataAccess
         public DbSet<TestProject> TestProjects { get; set; }
         public DbSet<TestScenario> TestScenarios { get; set; }
         public DbSet<TestCase> TestCases { get; set; }
-        public DbSet<Requirement> Requirements { get; set; }
     }
 }

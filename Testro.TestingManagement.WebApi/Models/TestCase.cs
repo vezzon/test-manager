@@ -5,6 +5,8 @@ namespace Testro.TestingManagement.WebApi.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public bool Result { get; set; }
+
+        public int TestScenarioId { get; set; }
+        public TestScenario TestScenario { get; set; }
     }
 }

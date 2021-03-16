@@ -8,9 +8,8 @@ namespace Testro.TestingManagement.WebApi.Models
         public string Name { get; set; }
         public List<TestCase> TestCases { get; set; }
 
-        public TestScenario(string name)
-        {
-            Name = name;
-        }
+
+        public int TestProjectId { get; set; }
+        public TestProject TestProject { get; set; }
     }
 }
