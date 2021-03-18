@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Testro.TestingManagement.WebApi.DataAccess;
 using Testro.TestingManagement.WebApi.Repositories;
@@ -32,6 +33,11 @@ namespace Testro.TestingManagement.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddMvc(o => o.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddNewtonsoftJson(o =>
+                    o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             
             services
                 .AddScoped<TestProjectRepository>()

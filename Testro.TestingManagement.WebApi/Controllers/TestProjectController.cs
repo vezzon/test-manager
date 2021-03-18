@@ -23,7 +23,7 @@ namespace Testro.TestingManagement.WebApi.Controllers
             return Ok(projects);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/test/{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var project = await _service.GetAsync(id);

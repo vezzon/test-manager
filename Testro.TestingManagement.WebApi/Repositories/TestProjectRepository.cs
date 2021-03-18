@@ -19,18 +19,24 @@ namespace Testro.TestingManagement.WebApi.Repositories
 
         public async Task<List<TestProject>> GetAsync()
         {
-            return await _db.TestProjects.ToListAsync();
+            return await _db.TestProjects
+                .Include(tp => tp.TestScenarios)
+                .ToListAsync();
         }
         
         public async Task<TestProject> GetAsync(int id)
         {
-            var project = _db.TestProjects.FirstOrDefaultAsync(p => p.Id == id);
+            var project = _db.TestProjects
+                .Include(tp => tp.TestScenarios)
+                .FirstOrDefaultAsync(p => p.Id == id);
             return await project;
         }
 
         public async Task<TestProject> GetAsync(string name)
         {
-            var project = _db.TestProjects.FirstOrDefaultAsync(p => p.Name == name);
+            var project = _db.TestProjects
+                .Include(tp => tp.TestScenarios)
+                .FirstOrDefaultAsync(p => p.Name == name);
             return await project;
         }
 

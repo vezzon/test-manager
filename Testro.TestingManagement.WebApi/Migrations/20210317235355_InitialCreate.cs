@@ -13,31 +13,12 @@ namespace Testro.TestingManagement.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "longtext", nullable: true),
+                    Requirements = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TestProjects", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Requirements",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Data = table.Column<string>(type: "longtext", nullable: true),
-                    TestProjectId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Requirements", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Requirements_TestProjects_TestProjectId",
-                        column: x => x.TestProjectId,
-                        principalTable: "TestProjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,7 +28,7 @@ namespace Testro.TestingManagement.WebApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: true),
-                    TestProjectId = table.Column<int>(type: "int", nullable: true)
+                    TestProjectId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +38,7 @@ namespace Testro.TestingManagement.WebApi.Migrations
                         column: x => x.TestProjectId,
                         principalTable: "TestProjects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,8 +49,7 @@ namespace Testro.TestingManagement.WebApi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "longtext", nullable: true),
                     Description = table.Column<string>(type: "longtext", nullable: true),
-                    Result = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TestScenarioId = table.Column<int>(type: "int", nullable: true)
+                    TestScenarioId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,13 +59,8 @@ namespace Testro.TestingManagement.WebApi.Migrations
                         column: x => x.TestScenarioId,
                         principalTable: "TestScenarios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Requirements_TestProjectId",
-                table: "Requirements",
-                column: "TestProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestCases_TestScenarioId",
@@ -100,9 +75,6 @@ namespace Testro.TestingManagement.WebApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Requirements");
-
             migrationBuilder.DropTable(
                 name: "TestCases");
 
