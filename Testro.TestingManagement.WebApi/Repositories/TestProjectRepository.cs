@@ -21,6 +21,7 @@ namespace Testro.TestingManagement.WebApi.Repositories
         {
             return await _db.TestProjects
                 .Include(tp => tp.TestScenarios)
+                .ThenInclude(tp => tp.TestCases)
                 .ToListAsync();
         }
         
@@ -28,6 +29,7 @@ namespace Testro.TestingManagement.WebApi.Repositories
         {
             var project = _db.TestProjects
                 .Include(tp => tp.TestScenarios)
+                .ThenInclude(tp => tp.TestCases)
                 .FirstOrDefaultAsync(p => p.Id == id);
             return await project;
         }
@@ -36,6 +38,7 @@ namespace Testro.TestingManagement.WebApi.Repositories
         {
             var project = _db.TestProjects
                 .Include(tp => tp.TestScenarios)
+                .ThenInclude(tp => tp.TestCases)
                 .FirstOrDefaultAsync(p => p.Name == name);
             return await project;
         }
