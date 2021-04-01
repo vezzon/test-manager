@@ -38,11 +38,25 @@ namespace Testro.TestingManagement.WebApi.Controllers
             await _service.AddAsync(project);
             return Ok(project);
         }
+        
+        [HttpPost("{projectId}/TestScenario")]
+        public async Task<IActionResult> CreateTestScenario(int projectId, TestScenario scenario)
+        {
+            await _service.AddTestScenarioAsync(projectId, scenario);
+            return Ok(scenario);
+        }
+        
+        [HttpPost("{projectId}/TestScenario/{scenarioId}/TestCase")]
+        public async Task<IActionResult> CreateTestCase(int projectId, int scenarioId, TestCase testCase)
+        {
+            await _service.AddTestCaseIntoTestScenarioAsync(projectId, scenarioId, testCase);
+            return Ok(testCase);
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteProject(id);
+            await _service.DeleteProjectAsync(id);
             return Ok();
         }
     }
