@@ -23,7 +23,7 @@ namespace Testro.TestingManagement.WebApi.Controllers
             return Ok(projects);
         }
 
-        [HttpGet("/test/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var project = await _service.GetAsync(id);
@@ -32,20 +32,18 @@ namespace Testro.TestingManagement.WebApi.Controllers
             return Ok(project);
         }
         
-        [HttpGet("{name}")]
-        public async Task<IActionResult> Get(string name)
-        {
-            var project = await _service.GetAsync(name);
-            if (project is null)
-                return NotFound();
-            return Ok(project);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create(TestProject project)
         {
             await _service.AddAsync(project);
             return Ok(project);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteProject(id);
+            return Ok();
         }
     }
 }

@@ -34,15 +34,6 @@ namespace Testro.TestingManagement.WebApi.Repositories
             return await project;
         }
 
-        public async Task<TestProject> GetAsync(string name)
-        {
-            var project = _db.TestProjects
-                .Include(tp => tp.TestScenarios)
-                .ThenInclude(tp => tp.TestCases)
-                .FirstOrDefaultAsync(p => p.Name == name);
-            return await project;
-        }
-
         public async Task AddAsync(TestProject project)
         {
             await _db.TestProjects.AddAsync(project);
@@ -55,9 +46,9 @@ namespace Testro.TestingManagement.WebApi.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string name)
+        public async Task DeleteAsync(int id)
         {
-            var project = _db.TestProjects.FirstOrDefault(p => p.Name == name);
+            var project = _db.TestProjects.FirstOrDefault(p => p.Id == id);
             if (project is not null)
             {
                 _db.TestProjects.Remove(project);

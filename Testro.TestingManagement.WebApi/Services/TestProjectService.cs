@@ -26,20 +26,15 @@ namespace Testro.TestingManagement.WebApi.Services
             return await _projectRepository.GetAsync(id);
         }
         
-        public async Task<TestProject> GetAsync(string name)
-        {
-            return await _projectRepository.GetAsync(name);
-        }
-        
         public async Task AddAsync(TestProject project)
         {
             // TODO check if project exists 
             await _projectRepository.AddAsync(project);
         }
         
-        public async Task AddTestScenario(string projectName, TestScenario scenario)
+        public async Task AddTestScenario(int id, TestScenario scenario)
         {
-            var project = await _projectRepository.GetAsync(projectName);
+            var project = await _projectRepository.GetAsync(id);
             if (project is not null)
             {
                 if (!ScenarioNameInProject(project, scenario.Name))
@@ -49,9 +44,9 @@ namespace Testro.TestingManagement.WebApi.Services
             }
         }
 
-        public async Task AddTestCaseIntoTestScenario(string projectName, string scenarioName, TestCase testCase)
+        public async Task AddTestCaseIntoTestScenario(int id, string scenarioName, TestCase testCase)
         {
-            var project = await _projectRepository.GetAsync(projectName);
+            var project = await _projectRepository.GetAsync(id);
             if (project is not null)
             {
                 if (ScenarioNameInProject(project, scenarioName))
@@ -64,9 +59,9 @@ namespace Testro.TestingManagement.WebApi.Services
             } 
         }
         
-        public async Task DeleteProject(string projectName)
+        public async Task DeleteProject(int id)
         {
-            await _projectRepository.DeleteAsync(projectName);
+            await _projectRepository.DeleteAsync(id);
         }
 
         private bool ScenarioNameInProject(TestProject project, string name)
