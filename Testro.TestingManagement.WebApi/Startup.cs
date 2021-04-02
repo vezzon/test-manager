@@ -18,6 +18,7 @@ using Testro.TestingManagement.WebApi.DataAccess;
 using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Repositories;
 using Testro.TestingManagement.WebApi.Services;
+using Testro.TestingManagement.WebApi.Workers;
 
 namespace Testro.TestingManagement.WebApi
 {
@@ -36,6 +37,8 @@ namespace Testro.TestingManagement.WebApi
             services.AddControllers();
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddHttpClient<NBPGoldService>();
             
             services.AddMvc(o => o.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
@@ -48,7 +51,9 @@ namespace Testro.TestingManagement.WebApi
                 .AddScoped<EntityService<TestProject>>()
                 .AddScoped<Repository<TestCase>>()
                 .AddScoped<Repository<TestScenario>>()
-                .AddScoped<Repository<TestProject>>();
+                .AddScoped<Repository<TestProject>>()
+                .AddScoped<NBPGoldService>()
+                .AddHostedService<GoldPriceWorker>();
             
             services.AddDbContext<DatabaseContext>(o =>
                 o
