@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Testro.TestingManagement.WebApi.DataAccess;
+using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Repositories;
 using Testro.TestingManagement.WebApi.Services;
 
@@ -34,21 +35,30 @@ namespace Testro.TestingManagement.WebApi
         {
             services.AddControllers();
 
+            services.AddAutoMapper(typeof(Startup));
+            
             services.AddMvc(o => o.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddNewtonsoftJson(o =>
                     o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
-            
+
             services
-                .AddScoped<TestProjectRepository>()
-                .AddScoped<TestProjectService>();
+                .AddScoped<EntityService<TestCase>>()
+                .AddScoped<EntityService<TestScenario>>()
+                .AddScoped<EntityService<TestProject>>()
+                .AddScoped<Repository<TestCase>>()
+                .AddScoped<Repository<TestScenario>>()
+                .AddScoped<Repository<TestProject>>();
             
             services.AddDbContext<DatabaseContext>(o =>
-                o.UseMySql(
+                o
+                    .UseLazyLoadingProxies()
+                    .UseMySql(
                     Configuration.GetConnectionString("DefaultConnection"),
                     new MariaDbServerVersion(new Version(10,5)), 
-                    mySqlOptionsAction => mySqlOptionsAction.CharSetBehavior(CharSetBehavior.NeverAppend)
-                )
+                    mySqlOptionsAction => mySqlOptionsAction
+                        .CharSetBehavior(CharSetBehavior.NeverAppend)
+                    )
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
                 );

@@ -8,6 +8,6 @@ namespace Testro.TestingManagement.WebApi.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Requirements { get; set; }
-        public List<TestScenario> TestScenarios { get; set; }
+        public virtual List<TestScenario> TestScenarios { get; set; }
     }
 }

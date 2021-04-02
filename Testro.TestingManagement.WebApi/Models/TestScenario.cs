@@ -6,10 +6,10 @@ namespace Testro.TestingManagement.WebApi.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<TestCase> TestCases { get; set; }
+        public virtual List<TestCase> TestCases { get; set; }
 
 
         public int TestProjectId { get; set; }
-        public TestProject TestProject { get; set; }
+        public virtual TestProject TestProject { get; set; }
     }
 }

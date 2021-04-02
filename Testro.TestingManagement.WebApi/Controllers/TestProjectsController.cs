@@ -1,71 +1,39 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Services;
+using Testro.TestingManagement.WebApi.ViewModels.TestCase;
+using Testro.TestingManagement.WebApi.ViewModels.TestProject;
+using Testro.TestingManagement.WebApi.ViewModels.TestScenario;
 
 namespace Testro.TestingManagement.WebApi.Controllers
 {
-    [ApiController]
-    [Route("api/v1/[controller]")]
-    public class TestProjectsController : ControllerBase
+    public class TestProjectsController : BaseController<TestProject, TestProjectView, TestProjectCreate, TestProjectUpdate>
     {
-        private readonly TestProjectService _service;
-
-        public TestProjectsController(TestProjectService service)
+        public TestProjectsController(EntityService<TestProject> service, IMapper mapper) : base(service, mapper)
         {
-            _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var projects = await _service.GetAsync();
-            return Ok(projects);
-        }
+        public Task<List<TestProjectView>> Get()
+            => GetAsync();
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var project = await _service.GetAsync(id);
-            if (project is null)
-                return NotFound();
-            return Ok(project);
-        }
-        
+        public Task<TestProjectView> Get(int id)
+            => GetAsync(id);
+
         [HttpPost]
-        public async Task<IActionResult> Create(TestProject project)
-        {
-            await _service.AddAsync(project);
-            return Ok(project);
-        }
-        
-        [HttpPost("{projectId}/TestScenarios")]
-        public async Task<IActionResult> CreateTestScenario(int projectId, TestScenario scenario)
-        {
-            await _service.AddTestScenarioAsync(projectId, scenario);
-            return Ok(scenario);
-        }
-        
-        [HttpPost("{projectId}/TestScenarios/{scenarioId}/TestCases")]
-        public async Task<IActionResult> CreateTestCase(int projectId, int scenarioId, TestCase testCase)
-        {
-            await _service.AddTestCaseIntoTestScenarioAsync(projectId, scenarioId, testCase);
-            return Ok(testCase);
-        }
+        public Task<TestProjectView> Create(TestProjectCreate projectCreate)
+            => CreateAsync(projectCreate);
+
+        [HttpPatch("{id}")]
+        public Task<TestProjectView> Update(int id, TestProjectUpdate projectUpdate)
+            => UpdateAsync(id, projectUpdate);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            await _service.DeleteProjectAsync(id);
-            return Ok();
-        }
-        
-        // TODO update test scenario
-        
-        // TODO update test case
-        
-        // TODO delete test scenario
-        
-        // TODO delete test case
+        public Task Delete(int id)
+            => DeleteAsync(id);
     }
 }
