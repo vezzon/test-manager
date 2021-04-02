@@ -7,11 +7,11 @@ namespace Testro.TestingManagement.WebApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class TestProjectController : ControllerBase
+    public class TestProjectsController : ControllerBase
     {
         private readonly TestProjectService _service;
 
-        public TestProjectController(TestProjectService service)
+        public TestProjectsController(TestProjectService service)
         {
             _service = service;
         }
@@ -39,14 +39,14 @@ namespace Testro.TestingManagement.WebApi.Controllers
             return Ok(project);
         }
         
-        [HttpPost("{projectId}/TestScenario")]
+        [HttpPost("{projectId}/TestScenarios")]
         public async Task<IActionResult> CreateTestScenario(int projectId, TestScenario scenario)
         {
             await _service.AddTestScenarioAsync(projectId, scenario);
             return Ok(scenario);
         }
         
-        [HttpPost("{projectId}/TestScenario/{scenarioId}/TestCase")]
+        [HttpPost("{projectId}/TestScenarios/{scenarioId}/TestCases")]
         public async Task<IActionResult> CreateTestCase(int projectId, int scenarioId, TestCase testCase)
         {
             await _service.AddTestCaseIntoTestScenarioAsync(projectId, scenarioId, testCase);
@@ -59,5 +59,13 @@ namespace Testro.TestingManagement.WebApi.Controllers
             await _service.DeleteProjectAsync(id);
             return Ok();
         }
+        
+        // TODO update test scenario
+        
+        // TODO update test case
+        
+        // TODO delete test scenario
+        
+        // TODO delete test case
     }
 }
