@@ -18,6 +18,7 @@ using Testro.TestingManagement.WebApi.DataAccess;
 using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Repositories;
 using Testro.TestingManagement.WebApi.Services;
+using Testro.TestingManagement.WebApi.Workers;
 
 namespace Testro.TestingManagement.WebApi
 {
@@ -52,6 +53,8 @@ namespace Testro.TestingManagement.WebApi
                 .AddScoped<Repository<TestScenario>>()
                 .AddScoped<Repository<TestProject>>()
                 .AddScoped<NBPGoldService>();
+
+            services.AddHostedService<TimeWorker>();
             
             services.AddDbContext<DatabaseContext>(o =>
                 o
