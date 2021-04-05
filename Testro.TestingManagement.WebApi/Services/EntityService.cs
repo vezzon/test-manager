@@ -8,9 +8,9 @@ namespace Testro.TestingManagement.WebApi.Services
 {
     public class EntityService<TEntity> where TEntity : class
     {
-        private readonly Repository<TEntity> _repository;
+        private readonly IRepository<TEntity> _repository;
         
-        public EntityService(Repository<TEntity> repository)
+        public EntityService(IRepository<TEntity> repository)
         {
             _repository = repository;
         }
