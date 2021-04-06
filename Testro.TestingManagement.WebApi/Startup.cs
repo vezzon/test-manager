@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Testro.TestingManagement.WebApi.DataAccess;
+using Testro.TestingManagement.WebApi.Middleware;
 using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Repositories;
 using Testro.TestingManagement.WebApi.Services;
@@ -52,6 +53,8 @@ namespace Testro.TestingManagement.WebApi
                 .AddScoped<Repository<TestScenario>>()
                 .AddScoped<Repository<TestProject>>()
                 .AddScoped<NBPGoldService>();
+
+            services.AddScoped<ErrorHandlingMiddleware>();
             
             services.AddDbContext<DatabaseContext>(o =>
                 o
@@ -82,6 +85,8 @@ namespace Testro.TestingManagement.WebApi
                 app.UseSwaggerUI(c =>
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Testro.TestingManagement.WebApi v1"));
             }
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 

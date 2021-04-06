@@ -22,7 +22,11 @@ namespace Testro.TestingManagement.WebApi.Services
         
         public async Task<TEntity> GetAsync(int id)
         {
-            return await _repository.GetAsync(id);
+            var entity = await _repository.GetAsync(id);
+            if (entity is null)
+                throw new NotFoundException();
+            
+            return entity;
         }
         
         public async Task AddAsync(TEntity entity)
@@ -30,24 +34,22 @@ namespace Testro.TestingManagement.WebApi.Services
             await _repository.AddAsync(entity);
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task UpdateAsync(int id, TEntity updateEntity)
         {
-            await _repository.UpdateAsync(entity);
+            var entity = await _repository.GetAsync(id);
+            if (entity is null)
+                throw new NotFoundException();
+
+            await _repository.UpdateAsync(updateEntity);
         }
         
-        public async Task DeleteAsync(TEntity entity)
-        {
-            await _repository.DeleteAsync(entity);
-        }
-        
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await GetAsync(id);
             if (entity is null)
-                return false;
+                throw new NotFoundException();
             
             await _repository.DeleteAsync(entity);
-            return true;
         }
     }
 }

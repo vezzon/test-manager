@@ -6,7 +6,7 @@ namespace Testro.TestingManagement.WebApi.Exceptions
 {
     public class NotFoundException : HttpRequestException
     {
-        public NotFoundException() : base("Not found.", null, HttpStatusCode.NotFound)
+        public NotFoundException() : base("Not found.")
         {
             
         }
