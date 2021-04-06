@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Moq;
 using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Repositories;
@@ -40,6 +41,24 @@ namespace Testro.TestingManagement.UnitTests
 
             // Assert
             Assert.Equal(projectId, projectFromMockRepo.Id);
+        }
+
+        [Fact]
+        public async Task AddAsync_WithValidEntity_ShouldAddEntity()
+        {
+            // Arrange
+            var project = new TestProject
+            {
+                Name = "Test",
+                Requirements = "Test Req",
+                TestScenarios = new List<TestScenario>()
+            };
+
+            // Act
+            await _sut.AddAsync(project);
+
+            // Assert
+            _projectRepoMock.Verify(r => r.AddAsync(It.Is<TestProject>(p => p == project)), Times.Once);
         }
     }
 }
