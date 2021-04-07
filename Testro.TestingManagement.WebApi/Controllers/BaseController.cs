@@ -48,14 +48,19 @@ namespace Testro.TestingManagement.WebApi.Controllers
         protected async Task<TView> UpdateAsync(int id, TUpdate entityUpdate)
         {
             var entity = await _service.GetAsync(id);
+            if (entity is null)
+                throw new NotFoundException();
+            
             _mapper.Map(entityUpdate, entity);
-            await _service.UpdateAsync(id, entity);
+            await _service.UpdateAsync(entity);
             return _mapper.Map<TView>(entity);
         }
 
         protected async Task DeleteAsync(int id)
         {
-            await _service.DeleteAsync(id);
+            var isDeleted = await _service.DeleteAsync(id);
+            if (!isDeleted)
+                throw new NotFoundException();
         }
     }
 }
