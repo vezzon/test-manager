@@ -23,8 +23,7 @@ namespace Testro.TestingManagement.WebApi.Middleware
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("Sorry, something went wrong.\n We are working to fix it.");
-                Console.WriteLine(e);
+                await context.Response.WriteAsync(e.Message);
             }
         }
     }
