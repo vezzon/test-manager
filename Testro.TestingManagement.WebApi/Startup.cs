@@ -19,6 +19,7 @@ using Testro.TestingManagement.WebApi.Middleware;
 using Testro.TestingManagement.WebApi.Models;
 using Testro.TestingManagement.WebApi.Repositories;
 using Testro.TestingManagement.WebApi.Services;
+using Testro.TestingManagement.WebApi.Workers;
 
 namespace Testro.TestingManagement.WebApi
 {
@@ -49,10 +50,12 @@ namespace Testro.TestingManagement.WebApi
                 .AddScoped<EntityService<TestCase>>()
                 .AddScoped<EntityService<TestScenario>>()
                 .AddScoped<EntityService<TestProject>>()
-                .AddScoped<IRepository<TestCase>, Repository<TestCase>>()
-                .AddScoped<IRepository<TestScenario>, Repository<TestScenario>>()
-                .AddScoped<IRepository<TestProject>, Repository<TestProject>>()
+                .AddScoped<Repository<TestCase>>()
+                .AddScoped<Repository<TestScenario>>()
+                .AddScoped<Repository<TestProject>>()
                 .AddScoped<NBPGoldService>();
+
+            services.AddHostedService<TimeWorker>();
 
             services.AddScoped<ErrorHandlingMiddleware>();
             
