@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Testro.TestingManagement.WebApi.Attributes;
 
 namespace Testro.TestingManagement.WebApi.ViewModels.TestCase
 {
@@ -9,6 +10,7 @@ namespace Testro.TestingManagement.WebApi.ViewModels.TestCase
         [Required]
         public string Description { get; set; }
         [Required]
+        [EntityId(typeof(Models.TestScenario))]
         public int? TestScenarioId { get; set; }
     }
 }
