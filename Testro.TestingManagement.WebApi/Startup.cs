@@ -1,19 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Testro.TestingManagement.WebApi.Configurations;
 using Testro.TestingManagement.WebApi.DataAccess;
 using Testro.TestingManagement.WebApi.Middleware;
 using Testro.TestingManagement.WebApi.Models;
@@ -36,6 +41,8 @@ namespace Testro.TestingManagement.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -70,7 +77,32 @@ namespace Testro.TestingManagement.WebApi
                     )
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
-                );
+            );
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+                .AddJwtBearer(jwt =>
+                {
+                    var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+                    jwt.SaveToken = true;
+                    jwt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        RequireExpirationTime = false
+                    };
+                });
+
+            services.AddDefaultIdentity<IdentityUser>(opt => opt.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<DatabaseContext>();
             
             services.AddSwaggerGen(c =>
             {
@@ -94,6 +126,8 @@ namespace Testro.TestingManagement.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
