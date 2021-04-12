@@ -47,6 +47,22 @@ namespace Testro.TestingManagement.WebApi.Controllers
             return BadRequest(isCreated.Errors.Select(x => x.Description).ToList());
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginDto user)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(user.Email);
+            if (existingUser is null)
+                return BadRequest("User doesn't exist");
+
+            var isValidPassword = await _userManager.CheckPasswordAsync(existingUser, user.Password);
+            if (!isValidPassword)
+                return BadRequest("User password invalid");
+
+            var jwtToken = GenerateJwtToken(existingUser);
+
+            return Ok(jwtToken);
+        }
+
         private string GenerateJwtToken(IdentityUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();

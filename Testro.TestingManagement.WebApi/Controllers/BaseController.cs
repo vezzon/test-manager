@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Testro.TestingManagement.WebApi.Exceptions;
 using Testro.TestingManagement.WebApi.Services;
@@ -11,6 +13,7 @@ namespace Testro.TestingManagement.WebApi.Controllers
 { 
     [ApiController]
     [Route("/api/v1/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public abstract class BaseController<TEntity, TView, TCreate, TUpdate> : ControllerBase
         where TEntity : class
     {
