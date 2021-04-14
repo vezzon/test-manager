@@ -1,12 +1,12 @@
-#Testro - Test Management System
+# Testro - Test Management System
 
-###Requirements
+### Requirements
 - .NET SDK 5, you can download it from:
 https://dotnet.microsoft.com/download/dotnet/5.0
 - Docker, you can download it from:
 https://www.docker.com/products/docker-desktop
 
-###How to setup project
+### How to setup project
 
 1. Clone repository from master branch
 
