@@ -6,7 +6,7 @@ using Testro.TestingManagement.WebApi.Repositories;
 
 namespace Testro.TestingManagement.WebApi.Services
 {
-    public class EntityService<TEntity> where TEntity : class
+    public class EntityService<TEntity> : IEntityService<TEntity> where TEntity : class
     {
         private readonly IRepository<TEntity> _repository;
         

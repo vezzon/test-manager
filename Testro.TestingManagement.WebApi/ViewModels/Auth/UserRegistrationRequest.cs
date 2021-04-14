@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Testro.TestingManagement.WebApi.Dtos
+namespace Testro.TestingManagement.WebApi.ViewModels.Auth
 {
-    public class UserLoginDto
+    public class UserRegistrationRequest
     {
         [Required]
         [EmailAddress]

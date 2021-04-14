@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Testro.TestingManagement.WebApi.Configurations;
-using Testro.TestingManagement.WebApi.Dtos;
+using Testro.TestingManagement.WebApi.ViewModels.Auth;
+using Testro.TestingManagement.WebApi.ViewModels.Responses;
 
 namespace Testro.TestingManagement.WebApi.Controllers
 {
@@ -27,12 +28,12 @@ namespace Testro.TestingManagement.WebApi.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationDto user)
+        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest user)
         {
             var existingUser = await _userManager.FindByEmailAsync(user.Email);
             if (existingUser is not null)
             {
-                return BadRequest("User already exists");
+                return BadRequest(new BadRequestResponse { Message = "User already exists."});
             }
 
             var newUser = new IdentityUser() {Email = user.Email, UserName = user.Email,};
@@ -41,26 +42,26 @@ namespace Testro.TestingManagement.WebApi.Controllers
             {
                 var jwtToken = GenerateJwtToken(newUser);
 
-                return Ok(jwtToken);
+                return Ok(new UserRegistrationResponse { Token = jwtToken });
             }
 
             return BadRequest(isCreated.Errors.Select(x => x.Description).ToList());
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto user)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest user)
         {
             var existingUser = await _userManager.FindByEmailAsync(user.Email);
             if (existingUser is null)
-                return BadRequest("User doesn't exist");
+                return BadRequest(new BadRequestResponse { Message = "User doesn't exists."});
 
             var isValidPassword = await _userManager.CheckPasswordAsync(existingUser, user.Password);
             if (!isValidPassword)
-                return BadRequest("User password invalid");
+                return BadRequest(new BadRequestResponse { Message = "Invalid password."});
 
             var jwtToken = GenerateJwtToken(existingUser);
 
-            return Ok(jwtToken);
+            return Ok(new UserLoginResponse { Token = jwtToken });
         }
 
         private string GenerateJwtToken(IdentityUser user)
