@@ -1,13 +1,21 @@
 using System;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Testro.TestingManagement.WebApi.Exceptions;
+using ILogger = Castle.Core.Logging.ILogger;
 
 namespace Testro.TestingManagement.WebApi.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {
-        // TODO Add logger
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+
+        public ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger)
+        {
+            _logger = logger;
+        }
         
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -17,11 +25,13 @@ namespace Testro.TestingManagement.WebApi.Middleware
             }
             catch (NotFoundException e)
             {
+                _logger.LogError(e.Message);
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(e.Message);
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync(e.Message);
             }
