@@ -8,7 +8,7 @@ namespace Testro.TestingManagement.WebApi.ViewModels.TestScenario
         [Required]
         public string Name { get; set; }
         [Required]
-        [EntityId(typeof(Models.TestScenario))]
+        [EntityId(typeof(Models.TestProject))]
         public int? TestProjectId { get; set; }
     }
 }
