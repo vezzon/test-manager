@@ -42,6 +42,9 @@ namespace Testro.TestingManagement.WebApi
         {
             services.AddControllers();
 
+            services.AddCors(opt => opt.AddDefaultPolicy(builder => 
+                builder.AllowAnyOrigin().AllowAnyHeader()));
+
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
             services.AddAutoMapper(typeof(Startup));
@@ -149,6 +152,8 @@ namespace Testro.TestingManagement.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
             
             app.UseAuthentication();
 
