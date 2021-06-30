@@ -46,20 +46,18 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
             var user = new IdentityUser
             {
                 UserName = "user2@example.com",
-                NormalizedUserName = "USER2@EXAMPLE.COM",
                 Email = "user2@example.com",
-                NormalizedEmail = "USER2@EXAMPLE.COM"
             };
             
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("bearer", GenerateJwtToken(user));
+                new AuthenticationHeaderValue("Bearer", GenerateJwtToken(user));
         
             // Act
             var result = await client.GetAsync(url);
         
             // Assert
-            result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
         }
         
         private string GenerateJwtToken(IdentityUser user)
