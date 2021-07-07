@@ -87,5 +87,22 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
             // Assert
             response.EnsureSuccessStatusCode();
         }
+
+
+        [Theory]
+        [InlineData("/api/v1/TestProjects/1")]
+        public async Task UpdateEntity(string url)
+        {
+            // Arrange
+            var user = Fixtures.Users.GetUser();
+            var entity = Fixtures.Projects.GetCreateEmptyProject();
+            var jsonEntity = JsonConvert.SerializeObject(entity);
+            
+
+            // Act
+
+            // Assert
+
+        }
     }
 }
