@@ -49,7 +49,6 @@ namespace Testro.TestingManagement.WebApi
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddHttpClient<NBPGoldService>();
             
             services.AddMvc(o => o.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
@@ -62,8 +61,7 @@ namespace Testro.TestingManagement.WebApi
                 .AddScoped<EntityService<TestProject>>()
                 .AddScoped<IRepository<TestCase>, Repository<TestCase>>()
                 .AddScoped<IRepository<TestScenario>, Repository<TestScenario>>()
-                .AddScoped<IRepository<TestProject>, Repository<TestProject>>()
-                .AddScoped<NBPGoldService>();
+                .AddScoped<IRepository<TestProject>, Repository<TestProject>>();
 
             services.AddHostedService<TimeWorker>();
 
