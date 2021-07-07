@@ -1,16 +1,11 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Security.Claims;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Testro.TestingManagement.WebApi;
-using Testro.TestingManagement.WebApi.Configurations;
+using Testro.TestingManagement.WebApi.Models;
 using Xunit;
 
 namespace Testro.TestingManagement.WebApiIntegrationTests
@@ -26,7 +21,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
 
         [Theory]
         [InlineData("/api/v1/TestProjects")]
-        public async Task GetAllProjects_WithoutAuthorization_ReturnForbidden(string url)
+        public async Task GetAllEntities_WithoutAuthorization_ReturnForbidden(string url)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -40,49 +35,57 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
         
         [Theory]
         [InlineData("/api/v1/TestProjects")]
-        public async Task GetAllProjects_WithAuthorization_ReturnOk(string url)
+        public async Task GetAllEntities_WithAuthorization_ReturnOk(string url)
         {
             // Arrange
-            var user = new IdentityUser
-            {
-                UserName = "user2@example.com",
-                Email = "user2@example.com",
-            };
+            var user = Fixtures.Users.GetUser();
             
             var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", GenerateJwtToken(user));
+            client.Authorize(user);
         
             // Act
             var result = await client.GetAsync(url);
         
             // Assert
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.EnsureSuccessStatusCode();
         }
-        
-        private string GenerateJwtToken(IdentityUser user)
+
+        [Theory]
+        [InlineData("/api/v1/TestProjects/1")]
+        public async Task GetEntityById_ReturnsEntityWithId(string url)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            // Arrange
+            var user = Fixtures.Users.GetUser();
+            
+            var client = _factory.CreateClient();
+            client.Authorize(user);
         
-            var key = Encoding.ASCII.GetBytes("l4Yt5ctUDiYETPEoRUQjzyVvK0JH03dS");
+            // Act
+            var result = await client.GetAsync(url);
+            var project = await result.Content.ReadAsAsync<TestProject>();
         
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim("id", user.Id),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }),
-                Expires = DateTime.UtcNow.AddHours(6),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-        
-            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
-            var jwtToken = jwtTokenHandler.WriteToken(token);
-        
-            return jwtToken;
+            // Assert
+            result.EnsureSuccessStatusCode();
+            project.Id.Should().Be(1);
+        }
+
+        [Theory]
+        [InlineData("/api/v1/TestProjects")]
+        public async Task CreateEntity(string url)
+        {
+            // Arrange
+            var user = Fixtures.Users.GetUser();
+            var entity = Fixtures.Projects.GetCreateEmptyProject();
+            var jsonEntity = JsonConvert.SerializeObject(entity);
+            var client = _factory.CreateClient();
+            client.Authorize(user);
+            var content = new StringContent(jsonEntity, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await client.PostAsync(url, content);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
 
                     try
                     {
-                        // Utilities.InitializeDbForTests(db);
+                        Utilities.InitializeDbForTests(db);
                     }
                     catch (Exception ex)
                     {
