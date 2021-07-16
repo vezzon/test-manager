@@ -83,5 +83,27 @@ namespace Testro.TestingManagement.WebApiIntegrationTests.Fixtures
                 TestScenarios = null
             };
         }
+        
+        public static TestProject GetProjectForUpdate()
+        {
+            return new TestProject
+            {
+                Id = 3,
+                Name = "Project for update",
+                Requirements = "Please update",
+                TestScenarios = null
+            };
+        }
+
+        public static TestProject GetProjectForDelete()
+        {
+            return new TestProject
+            {
+                Id = 4,
+                Name = "Project for delete",
+                Requirements = "Please delete",
+                TestScenarios = null
+            };
+        }
     }
 }

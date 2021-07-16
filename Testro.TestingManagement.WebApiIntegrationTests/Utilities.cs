@@ -15,6 +15,8 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
         public static void InitializeDbForTests(DatabaseContext db)
         {
             db.TestProjects.Add(Fixtures.Projects.GetProject());
+            db.TestProjects.Add(Fixtures.Projects.GetProjectForUpdate());
+            db.TestProjects.Add(Fixtures.Projects.GetProjectForDelete());
             db.SaveChanges();
         }
 
@@ -39,7 +41,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(6),
+                Expires = DateTime.UtcNow.AddYears(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
         
