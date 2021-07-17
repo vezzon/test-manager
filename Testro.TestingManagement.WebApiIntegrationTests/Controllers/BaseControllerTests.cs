@@ -8,11 +8,12 @@ using Testro.TestingManagement.WebApi;
 using Testro.TestingManagement.WebApi.Models;
 using Xunit;
 
-namespace Testro.TestingManagement.WebApiIntegrationTests
+namespace Testro.TestingManagement.WebApiIntegrationTests.Controllers
 {
-    public class BaseControllerTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public abstract class BaseControllerTests<TEntity> : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly CustomWebApplicationFactory<Startup> _factory;
+        protected virtual TEntity UpdateEntity { get; }
 
         public BaseControllerTests(CustomWebApplicationFactory<Startup> factory)
         {
@@ -33,8 +34,6 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
             result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
         
-        [Theory]
-        [InlineData("/api/v1/TestProjects")]
         public async Task GetAllEntities_WithAuthorization_ReturnOk(string url)
         {
             // Arrange
@@ -61,11 +60,11 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
         
             // Act
             var result = await client.GetAsync(url);
-            var project = await result.Content.ReadAsAsync<TestProject>();
+            var entity = await result.Content.ReadAsAsync<TEntity>();
         
             // Assert
             result.EnsureSuccessStatusCode();
-            project.Id.Should().Be(1);
+            entity.Should().NotBeNull();
         }
         
         [Theory]
@@ -110,7 +109,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
         {
             // Arrange
             var user = Fixtures.Users.GetUser();
-            var entity = new TestProject();
+            var entity =  new object();
             var jsonEntity = JsonConvert.SerializeObject(entity);
             var client = _factory.CreateClient();
             client.Authorize(user);
@@ -126,7 +125,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
 
         [Theory]
         [InlineData("/api/v1/TestProjects/1")]
-        public async Task UpdateEntity(string url)
+        public async Task UpdateEntity_ReturnsOk(string url)
         {
             // Arrange
             var user = Fixtures.Users.GetUser();
@@ -145,7 +144,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests
 
         [Theory]
         [InlineData("/api/v1/TestProjects/4")]
-        public async Task DeleteEntity(string url)
+        public async Task DeleteEntity_WithValidId_RemovesEntity(string url)
         {
             // Arrange
             var user = Fixtures.Users.GetUser();
