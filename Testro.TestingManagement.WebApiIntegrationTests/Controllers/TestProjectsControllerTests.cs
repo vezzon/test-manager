@@ -15,7 +15,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests.Controllers
 
         [Theory]
         [InlineData("/api/v1/TestProjects")]
-        public async Task GetAllProjects(string url)
+        public async Task GetAllProjects_WithAuthorization_ReturnOk(string url)
             => await GetAllEntities_WithAuthorization_ReturnOk(url);
     }
 }

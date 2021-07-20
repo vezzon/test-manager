@@ -34,7 +34,7 @@ namespace Testro.TestingManagement.WebApiIntegrationTests.Controllers
             result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
         
-        public async Task GetAllEntities_WithAuthorization_ReturnOk(string url)
+        protected async Task GetAllEntities_WithAuthorization_ReturnOk(string url)
         {
             // Arrange
             var user = Fixtures.Users.GetUser();
